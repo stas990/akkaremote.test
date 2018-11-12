@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Configuration;
+using AkkaRemote.Example.Web.Actors;
 using System.IO;
 using System.Threading;
 
@@ -15,6 +16,7 @@ namespace AkkaRemote.Example.Web
 		{
 			_system = ActorSystem.Create("ExampleActors", ConfigurationFactory.ParseString(File.ReadAllText("akka.conf")));
 			MessageRecipientRef = _system.ActorSelection($"{Startup.Configuration["client"]}user/MessageRecipient");
+			_system.ActorOf(RecipientWatcherActor.GetProps(MessageRecipientRef));
 		}
 
 		public static AkkaActors Instance
